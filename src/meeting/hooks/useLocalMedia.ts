@@ -201,11 +201,14 @@ export function useLocalMedia(): LocalMedia {
    */
   const toggleCamera = useCallback(() => {
     const tracks = videoStream.current?.getVideoTracks() ?? []
-    if (tracks.length === 0) return
+    if (tracks.length === 0) {
+      void startCamera()
+      return
+    }
     const next = !tracks[0]?.enabled
     tracks.forEach((track) => (track.enabled = next))
     setCameraEnabled(next)
-  }, [])
+  }, [startCamera])
 
   const toggleMicrophone = useCallback(() => {
     const tracks = audioStream.current?.getAudioTracks() ?? []

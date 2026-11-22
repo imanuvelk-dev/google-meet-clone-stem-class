@@ -108,15 +108,30 @@ export class VideoSdkMediaClient implements MediaClient {
   }
 
   async createCameraTrack(options?: TrackOptions): Promise<MediaStream> {
+    const baseConfig = {
+      ...(options?.deviceId ? { cameraId: options.deviceId } : {}),
+      optimizationMode: 'motion' as const,
+      multiStream: false,
+    }
+
     try {
       return await createCameraVideoTrack({
-        ...(options?.deviceId ? { cameraId: options.deviceId } : {}),
+        ...baseConfig,
         encoderConfig: 'h720p_w1280p',
-        optimizationMode: 'motion',
-        multiStream: false,
       })
-    } catch (error) {
-      throw toMediaError(error, 'camera')
+    } catch {
+      try {
+        return await createCameraVideoTrack({
+          ...baseConfig,
+          encoderConfig: 'h540p_w960p',
+        })
+      } catch {
+        try {
+          return await createCameraVideoTrack(baseConfig)
+        } catch (error) {
+          throw toMediaError(error, 'camera')
+        }
+      }
     }
   }
 

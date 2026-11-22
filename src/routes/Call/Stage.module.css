@@ -42,8 +42,9 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 240px;
+  width: clamp(280px, 22vw, 360px);
   flex-shrink: 0;
+  overflow-y: auto;
 }
 
 .stripCell {
@@ -51,10 +52,10 @@
   container-name: tile;
   display: grid;
   place-items: center;
-  /* Every strip tile is the same height whatever the count, so the strip does
-     not resize itself as people paginate through it. */
-  flex: 0 0 calc((100% - 5 * 16px) / 6);
-  min-height: 0;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: calc((100% - (var(--strip-count, 1) - 1) * 16px) / var(--strip-count, 1));
+  min-height: 120px;
 }
 
 .share {

@@ -167,7 +167,11 @@ export function Stage({ layout }: { layout: LayoutMode }) {
         </div>
 
         {arrangement === 'sidebar' ? (
-          <div className={styles.strip} data-testid="stage-strip">
+          <div
+            className={styles.strip}
+            style={{ '--strip-count': onPage.length } as React.CSSProperties}
+            data-testid="stage-strip"
+          >
             {onPage.map((id) => (
               <div key={id} className={styles.stripCell}>
                 <ParticipantTile

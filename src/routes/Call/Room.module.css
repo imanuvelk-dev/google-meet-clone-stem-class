@@ -1,0 +1,65 @@
+/*
+ * The states either side of the call: joining, a failed join, and post-call.
+ *
+ * Dark, because they belong to the call rather than to the green room, and the
+ * call is an always-dark surface. Not a theme. See CLAUDE.md.
+ *
+ * None of these three screens is in the Figma. Joining and the failed join have
+ * no design at all; post-call is a live-Meet screen that M7 owns. So this is
+ * plain and centred rather than an invented Meet layout that nobody has approved.
+ */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 100dvh;
+  padding: 24px;
+  background-color: var(--color-call-surface);
+  color: var(--color-call-text);
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--text-title-family);
+  font-size: var(--text-title-size);
+  font-weight: var(--text-title-weight);
+  line-height: var(--text-title-line-height);
+  color: var(--color-call-text);
+}
+
+.description {
+  margin: 0;
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  color: var(--color-call-text);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* The accent ring is a blue that all but disappears against black. */
+.actions button:focus-visible {
+  outline-color: var(--color-call-text);
+}
+
+/*
+ * Button's text variant is built for the light surfaces: accent-blue label on an
+ * accent-container hover. Both are close to unreadable on black, so the label
+ * and the hover are restated here rather than a new primitive variant being
+ * invented for two buttons.
+ */
+.secondary {
+  color: var(--color-call-text);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: var(--color-call-control);
+}

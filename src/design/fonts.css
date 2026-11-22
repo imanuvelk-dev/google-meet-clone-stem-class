@@ -1,0 +1,33 @@
+/**
+ * Product Sans, self-hosted. Hand-written: not generated, unlike tokens.css.
+ *
+ * Only the three faces the Figma actually uses. Regenerate the woff2 with
+ * `npm run fonts:build`.
+ *
+ * font-display: swap keeps the precall readable while the face loads. The
+ * camera preview is the slow part of that screen; text should never wait on it.
+ */
+
+@font-face {
+  font-family: 'Product Sans';
+  src: url('/fonts/ProductSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Product Sans';
+  src: url('/fonts/ProductSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Product Sans';
+  src: url('/fonts/ProductSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

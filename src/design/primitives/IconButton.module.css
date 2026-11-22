@@ -1,0 +1,84 @@
+/* The circular mic/camera controls. In the Figma these sit over the video
+   preview, so the default variant is a white outline on the image itself. */
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background-color var(--motion-duration-tint) var(--motion-ease-standard),
+    color var(--motion-duration-tint) var(--motion-ease-standard),
+    border-color var(--motion-duration-tint) var(--motion-ease-standard),
+    transform var(--motion-duration-press) var(--motion-ease-standard);
+}
+
+.iconButton:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconButton:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.iconButton:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+/* Sizes */
+
+.medium {
+  width: 40px;
+  height: 40px;
+}
+
+.large {
+  /* The preview overlay controls in the Figma. */
+  width: 48px;
+  height: 48px;
+}
+
+/* Variants */
+
+.standard {
+  color: var(--color-text-secondary);
+}
+
+.standard:hover:not(:disabled) {
+  background-color: var(--color-surface-variant);
+}
+
+.overlay {
+  /* Sits on the video. Not tokenised: these are alpha values over an image,
+     not palette colours, and the Figma has no variable for them. */
+  color: #ffffff;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 60%);
+}
+
+.overlay:hover:not(:disabled) {
+  background-color: rgb(255 255 255 / 15%);
+}
+
+/* Muted mic / camera off. Meet fills these red rather than just outlining, so
+   the state reads at a glance rather than needing the icon to be decoded. */
+.danger {
+  background-color: var(--color-error);
+  color: var(--color-text-on-accent);
+}
+
+.danger:hover:not(:disabled) {
+  background-color: var(--color-error);
+  filter: brightness(0.92);
+}

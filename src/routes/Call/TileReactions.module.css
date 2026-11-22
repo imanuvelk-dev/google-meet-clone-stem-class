@@ -1,0 +1,100 @@
+/*
+ * Reactions rising over one tile. Live-Meet-sourced - no Figma frame draws them.
+ *
+ * `.tile` is `overflow: hidden`, so Meet's overshoot past the tile's top edge is
+ * not available to us: an emoji leaving the box is sliced mid-flight rather than
+ * floating free. The travel is bounded inside the tile instead, and expressed in
+ * `em` against the glyph's own font-size rather than in px or `cqh`.
+ *
+ * That choice is what keeps it correct at every size. The steps below shrink the
+ * glyph; the flight shrinks with it, so the emoji clears the name by the same
+ * visual margin on a 260px thumbnail as on the frame's 840px tile, and can never
+ * reach the top edge on a tile of any shape. `cqh` would not hold: the container
+ * is the grid CELL, and `.tile` letterboxes itself inside it, so cell height and
+ * tile height are the same number only when the cell is already 840:502.
+ */
+
+.layer {
+  position: absolute;
+  /* Left-aligned with `.name`, and clear of it: the name's box tops out around
+     40px, so this floor sits just above it and the flight goes up from there. */
+  left: 16px;
+  bottom: 48px;
+
+  /* A row, not a stack. Two reactions landing in the same frame would sit on
+     exactly the same pixels if stacked, which is the one thing reaction.id keys
+     exist to prevent - separate occurrences must look separate. */
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+
+  pointer-events: none;
+}
+
+.reaction {
+  font-size: 32px;
+  line-height: 1;
+  animation: tile-reaction-float 2.4s ease-out forwards;
+  /* Same job as the name's text-shadow: an emoji lands on whatever the camera
+     happens to be pointing at. drop-shadow, not text-shadow, because the glyph
+     is a colour bitmap and text-shadow ignores it. */
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 25%));
+}
+
+@keyframes tile-reaction-float {
+  from {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateY(-0.5em) scale(1);
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-2.5em) scale(0.9);
+  }
+}
+
+/* The glyph and its floor step with the tile, in step with `.name`, which they
+   have to stay clear of. Container queries, not viewport ones: a tile shrinks
+   when the grid fills up, not when the window does. */
+@container tile (max-width: 420px) {
+  .layer {
+    left: 10px;
+    bottom: 34px;
+  }
+
+  .reaction {
+    font-size: 24px;
+  }
+}
+
+@container tile (max-width: 260px) {
+  .layer {
+    bottom: 30px;
+  }
+
+  .reaction {
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reaction {
+    /*
+     * Near-zero, and NOT `animation: none`. TileReactions clears each entry in
+     * `onAnimationEnd`, and an animation that never runs never ends - the emoji
+     * would sit on the tile forever, and every later reaction would pile up
+     * beside it. Collapsing the duration keeps the one code path that owns a
+     * reaction's lifetime alive for everyone.
+     */
+    animation-duration: 1ms;
+  }
+}

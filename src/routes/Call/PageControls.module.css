@@ -1,0 +1,36 @@
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Floated over the grid rather than reflowing it: a page control appearing when
+   the 50th person joins must not resize all 49 tiles. */
+.overGrid {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  background-color: rgb(0 0 0 / 60%);
+}
+
+.underStrip {
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.button {
+  color: var(--color-call-text);
+}
+
+.counter {
+  min-width: 48px;
+  text-align: center;
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  color: var(--color-call-text);
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,76 @@
+/* No Figma frame: live-sourced from Meet, screenshot-review material. Meet
+   stacks these top-right, over the stage rather than reflowing it. */
+
+.stack {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 320px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--radius-2xl);
+  background-color: var(--color-call-panel-surface);
+  color: var(--color-call-panel-text);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--text-body-lg-family);
+  font-size: var(--text-body-lg-size);
+  line-height: var(--text-body-lg-line-height);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.admit,
+.deny {
+  padding: 8px 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  font-family: var(--text-label-family);
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+  line-height: var(--text-label-line-height);
+  cursor: pointer;
+}
+
+.admit {
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+
+.deny {
+  background: transparent;
+  color: var(--color-accent);
+}
+
+.admit:focus-visible,
+.deny:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+  .stack {
+    top: 16px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+  }
+}

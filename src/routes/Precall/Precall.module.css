@@ -1,0 +1,379 @@
+/* Desktop / Home / Light, 1728x1117 in the Figma.
+   Geometry is taken from the extracted node tree, not eyeballed. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background-color: var(--color-surface);
+}
+
+/* Figma: Top Nav 1728x56. The height is load-bearing, not cosmetic: the body
+   below is centred in what the header leaves, so a header 8px too tall pushed
+   both columns 4px off the Figma's centre line. */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brandName {
+  font-family: var(--text-title-family);
+  font-size: var(--text-title-size);
+  color: var(--color-text-secondary);
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.accountName {
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  color: var(--color-text-primary);
+}
+
+/*
+ * Figma: Container 1728x1061 holding the preview column and the join column.
+ *
+ * Grid rather than nested flex columns. The title belongs in the right column on
+ * desktop and above the preview on mobile, and grid areas move it without
+ * rendering it twice. Duplicating an <h1> and hiding one per breakpoint would
+ * put two page headings in the accessibility tree.
+ */
+.body {
+  display: grid;
+  flex: 1;
+  /*
+   * 740 is the Figma's preview width, but as a cap rather than a fixed size.
+   * Below roughly 1175px the two fixed columns plus the gap no longer fit, and
+   * the page used to scroll sideways (115px of it at 950). The join column
+   * stays exactly 240: it holds a fixed-width button and field, and shrinking
+   * it buys nothing.
+   */
+  grid-template-columns: minmax(0, 740px) 240px;
+  grid-template-areas:
+    'preview title'
+    'preview join';
+  align-content: center;
+  justify-content: center;
+  /*
+   * 143px at the Figma's canvas, and it stays exactly 143 down to ~1192px.
+   * Below that the gap is the first thing to give, because it is the emptiest
+   * pixels on the screen.
+   */
+  column-gap: min(143px, 12vw);
+  /* Figma: the gap between the title block and what follows it inside the
+     240x152 container. Ours has the name field there instead of Join. */
+  row-gap: 16px;
+  /*
+   * The Figma does not centre this block: in its 1728 canvas the content sits
+   * at left 331 / right 274, i.e. 28.5px right of centre. Nothing in the file
+   * explains that as a rule -- the frame's outer Container has no auto-layout,
+   * so the two columns are placed freehand, and both the 143px gap and the
+   * asymmetry are where they were dropped rather than a scale (every authored
+   * gap in the file is 4/8/10/16/18/24). It is reproduced because desktop is
+   * specified as the frame exactly, and the offset is visible at 1728 either
+   * way.
+   *
+   * Written as centring inside asymmetric padding rather than a 331px left
+   * margin: 81px is 24px plus the 57px the Figma gives the left over the right,
+   * and centring halves that back to the 28.5px offset. The block then holds
+   * the same offset from centre as the viewport narrows, instead of pinning to
+   * a margin that only means anything at exactly 1728.
+   */
+  padding: 0 24px 0 81px;
+}
+
+.titleBlock {
+  grid-area: title;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  align-self: end;
+}
+
+/* Figma: Container 740x482, vertical stack, gap 10px. */
+.previewColumn {
+  grid-area: preview;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Fills its track, which caps at the Figma's 740. See .body. */
+  width: 100%;
+}
+
+/*
+ * Figma: Video Preview 740x416.
+ *
+ * The ratio is the fixed thing, not the width: the track caps at 740, so this
+ * is exactly 740x416 at the Figma's canvas and shrinks with the column below
+ * it rather than pushing the page sideways.
+ */
+.preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 740 / 416;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  background-color: #1f1f1f;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Mirror the self-view. Meet does this; an unmirrored preview reads as wrong
+     the moment you raise a hand. */
+  transform: scaleX(-1);
+}
+
+.previewName {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  color: #ffffff;
+  font-family: var(--text-label-family);
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
+}
+
+/* Figma: the three round controls sit centred over the video. */
+.previewControls {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+}
+
+/* Shown instead of the video when the camera cannot run. */
+.previewFallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  text-align: center;
+  padding: 24px;
+}
+
+.previewFallbackTitle {
+  font-family: var(--text-body-lg-family);
+  font-size: var(--text-body-lg-size);
+}
+
+/* Figma: Options 740x56, horizontal row, padding 8/0. */
+.deviceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 56px;
+  padding: 8px 0;
+}
+
+/* Figma: Container 240x304, vertical stack, gap 24px. */
+.joinColumn {
+  grid-area: join;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 240px;
+  align-self: start;
+}
+
+/* Figma: Container 240x152, vertical stack, gap 16px, holding the title block
+   and Join. The title block sits in its own grid area so it can move above the
+   preview on mobile, so this group holds what is left: the name field and Join.
+   Nesting it rather than flattening the column keeps Figma's two rhythms
+   distinct -- 16px within the join group, 24px out to Options. */
+.joinGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 240px;
+}
+
+.meetingName {
+  margin: 0;
+  width: 240px;
+  text-align: center;
+  font-family: var(--text-display-family);
+  font-size: var(--text-display-size);
+  font-weight: var(--text-display-weight);
+  line-height: var(--text-display-line-height);
+  color: var(--color-text-primary);
+}
+
+/* Figma: Join 240x56. */
+.joinButton {
+  width: 240px;
+  height: 56px;
+}
+
+.nameField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 240px;
+}
+
+.nameLabel {
+  font-family: var(--text-caption-family);
+  font-size: var(--text-caption-size);
+  color: var(--color-text-secondary);
+}
+
+.nameInput {
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+}
+
+.nameInput:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -1px;
+  border-color: transparent;
+}
+
+/*
+ * Poor-connection warning. No Figma frame has one, so this follows Meet's own
+ * precall notice: an informational chip under the preview, not an alert. The
+ * connection being weak is worth knowing before you join, but it does not stop
+ * you joining, and red would say otherwise.
+ */
+.networkWarning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 740px;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-accent-container);
+  color: var(--color-text-primary);
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+}
+
+/* The text wraps at narrow widths; the icon must not be squashed by it. */
+.networkWarning svg {
+  flex-shrink: 0;
+}
+
+/*
+ * Mobile web.
+ *
+ * The Figma's mobile frames are the native iOS app, so they are reference for
+ * structure and spacing only; this targets real Meet mobile web. See CLAUDE.md.
+ *
+ * Both agree on the shape, and it is not the desktop layout stacked:
+ * title at the top, portrait preview, and the join CTA pinned within reach.
+ * Neither shows a row of device dropdowns, so ours moves behind the preview's
+ * overflow button: inline it costs ~200px and pushes Join below the fold.
+ */
+@media (max-width: 900px) {
+  .body {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'title'
+      'preview'
+      'join';
+    align-content: start;
+    row-gap: 12px;
+    /* Room for the sticky join bar, plus the phone's own home indicator. */
+    padding: 8px 16px calc(96px + env(safe-area-inset-bottom));
+  }
+
+  /* Figma mobile: title block padding 0/16/8/16, gap 8, left-aligned. */
+  .titleBlock {
+    align-items: flex-start;
+    gap: 8px;
+    align-self: auto;
+  }
+
+  .meetingName {
+    width: 100%;
+    text-align: left;
+    /* Figma mobile title is 28px/h1-sized rather than the desktop display size. */
+    font-size: var(--text-headline-size);
+    line-height: var(--text-headline-line-height);
+  }
+
+  .previewColumn,
+  .networkWarning {
+    width: 100%;
+  }
+
+  .preview {
+    width: 100%;
+    height: auto;
+    /* Portrait, like the phone and like the Figma's mobile preview. */
+    aspect-ratio: 3 / 4;
+    max-height: 46vh;
+  }
+
+  .joinColumn {
+    width: 100%;
+    align-self: auto;
+    gap: 16px;
+  }
+
+  .joinGroup,
+  .nameField {
+    width: 100%;
+  }
+
+  /*
+   * The join bar is pinned. On desktop the button sits in a column you can see
+   * all of; on a phone the page scrolls, and the one action you came for must
+   * not be the thing you have to hunt for.
+   */
+  .joinButton {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    z-index: 5;
+    width: auto;
+  }
+
+  /* Device pickers: stacked inline under the preview. */
+  .deviceRow {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    gap: 4px;
+    padding: 8px;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface-variant);
+  }
+}

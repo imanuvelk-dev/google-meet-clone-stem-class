@@ -1,0 +1,52 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Secrets - VIDEOSDK_SECRET must never be committed
+.env
+.env.*
+!.env.example
+
+# Figma extraction output - regenerated via `npm run figma:pull`
+.figma/
+
+# Font sources. The 3 woff2 faces we actually ship are committed under
+# public/fonts; these 12 TTFs are just the input to `npm run fonts:build`.
+fonts-src/
+
+# Test artifacts
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/.playwright-mcp/
+coverage
+
+# Local HTTPS certificates (mkcert)
+certs/
+*.pem
+
+# Agent worktrees. Only the worktrees, not all of .claude - settings.json and
+# agent definitions are the kind of thing a repo may well want to track.
+.claude/worktrees/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

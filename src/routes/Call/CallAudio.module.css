@@ -1,0 +1,46 @@
+/*
+ * The in-call surface is always dark, and these are the --color-call-* tokens,
+ * not a dark theme. See CLAUDE.md.
+ */
+
+/*
+ * display:none rather than hidden or offscreen positioning. An <audio> with no
+ * controls renders nothing anyway, but saying so is what stops it participating
+ * in the grid's layout the day the grid arrives.
+ */
+.audio {
+  display: none;
+}
+
+/*
+ * Meet floats its snackbars bottom-left over the call rather than reflowing it.
+ * Fixed for the same reason the reconnecting banner is: an interruption must not
+ * resize the meeting on its way past.
+ */
+.prompt {
+  position: fixed;
+  bottom: 96px;
+  left: 24px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 560px;
+  padding: 14px 16px 14px 20px;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-call-control);
+  color: var(--color-call-text);
+}
+
+.promptText {
+  margin: 0;
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  color: var(--color-call-text);
+}
+
+.promptButton:focus-visible {
+  /* The accent ring is a blue that all but vanishes on black. */
+  outline-color: var(--color-call-text);
+}

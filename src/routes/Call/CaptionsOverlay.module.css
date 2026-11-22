@@ -1,0 +1,44 @@
+/* No Figma frame: captions are live-sourced from Meet and are screenshot-review
+   material. Bottom-center, above the control bar, opaque first per the plan -
+   no call token carries translucency yet. */
+
+.overlay {
+  position: fixed;
+  bottom: 96px;
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 720px;
+  padding: 8px 16px;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-call-control);
+  color: var(--color-call-text);
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.line {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin: 0;
+}
+
+.speaker {
+  flex: none;
+  font-family: var(--text-body-lg-strong-family);
+  font-size: var(--text-body-lg-strong-size);
+  font-weight: var(--text-body-lg-strong-weight);
+  line-height: var(--text-body-lg-strong-line-height);
+  color: var(--color-call-text);
+}
+
+.text {
+  font-family: var(--text-body-lg-family);
+  font-size: var(--text-body-lg-size);
+  font-weight: var(--text-body-lg-weight);
+  line-height: var(--text-body-lg-line-height);
+  color: var(--color-call-text);
+}

@@ -1,0 +1,186 @@
+/*
+ * Figma: `Person` (I64:2563;64:2104), 840x502 at radius 24, inside the 1696x1021
+ * `People` stage of Desktop / Meeting / Light (42:6675).
+ *
+ * The tile sizes itself against its cell rather than being told its size, which
+ * is why the grid only has to hand it a container. Container units, not viewport
+ * media queries: a tile shrinks when the grid fills up, not when the window does.
+ */
+
+.tile {
+  position: relative;
+  width: 100%;
+  height: min(100cqh, 100cqw * 502 / 652);
+  border-radius: var(--radius-3xl);
+  overflow: hidden;
+  background-color: var(--color-call-control);
+}
+
+@media (max-width: 900px) {
+  .tile {
+    height: 100cqh;
+  }
+}
+
+/* Figma: the image fill carries a second SOLID black fill at 10% over the video. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(0 0 0 / 10%);
+  pointer-events: none;
+}
+
+/* The tile's own surface shows through. See the note in ParticipantTile.tsx for
+   why this is neutral rather than derived from the avatar. */
+.cameraOff {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+/*
+ * Figma: text at (16, 462) in an 840x502 tile - 16px in from the left, and
+ * 502 - 462 - 24 = 16px up from the bottom.
+ */
+.name {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  right: 44px;
+  margin: 0;
+  font-family: var(--text-body-lg-strong-family);
+  font-size: var(--text-body-lg-strong-size);
+  font-weight: var(--text-body-lg-strong-weight);
+  line-height: var(--text-body-lg-strong-line-height);
+  color: var(--color-call-text);
+  /* Figma: DROP_SHADOW 0 1 blur 2, black at 25%. Earns its keep - the name sits
+     on whatever the camera happens to be pointing at. */
+  text-shadow: 0 1px 2px rgb(0 0 0 / 25%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+/* Figma: `Muted` 28x28 at (802, 10) in an 840x502 tile - inset 10px, top right. */
+.muted {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background-color: rgb(0 0 0 / 40%);
+  color: var(--color-call-text);
+}
+
+/*
+ * Live Meet, no Figma frame. Bottom right, and the tile's own geometry picked
+ * the corner rather than taste: the pin owns the top left, `Muted` owns the top
+ * right, and `.name` already reserves `right: 44px` at the bottom - which is
+ * exactly a 28px badge at a 10px inset plus a 6px gap. That reserve was cut for
+ * a badge in this slot, so the corner is both the free one and the intended one.
+ *
+ * It also lands where Meet puts it: beside the name, reading as "this person",
+ * where the top right reads as "this person's mic". Same 28px black-at-40% disc
+ * as `.muted` so the two are visibly one family.
+ */
+.handRaised {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background-color: rgb(0 0 0 / 40%);
+  color: var(--color-call-text);
+}
+
+.pin {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  opacity: 0;
+  transition: opacity var(--motion-duration-tint) var(--motion-ease-standard);
+}
+
+/* focus-within, not just hover: the pin has to be reachable without a mouse, and
+   an opacity-0 button is invisible but still focusable. */
+.tile:hover .pin,
+.tile:focus-within .pin,
+.pinActive {
+  opacity: 1;
+}
+
+/*
+ * Meet's speaking indicator. An inset outline rather than a border, so the ring
+ * appears without the tile changing size and shoving its neighbours.
+ * --color-accent is a blue that all but disappears on this surface.
+ */
+.tile[data-active-speaker] {
+  outline: 3px solid var(--color-accent-subtle);
+  outline-offset: -3px;
+}
+
+/*
+ * The name and the avatar shrink with the tile. Meet keeps both legible rather
+ * than proportional, so these step rather than scale - below roughly a quarter
+ * of the frame's tile, 16px Bold stops being a label and starts being a banner.
+ */
+@container tile (max-width: 420px) {
+  .name {
+    left: 10px;
+    bottom: 10px;
+
+    /*
+     * The right reserve deliberately does NOT tighten here, though every other
+     * value does. It held `34px` while the bottom right was empty, which is a
+     * 20px badge at a 6px inset plus an 8px gap - the reserve for the badge as
+     * it is sized BELOW, at 260. Nothing occupied the slot then, so being one
+     * step early cost nothing. `.handRaised` fills it now and is still 28px
+     * here, so the early tighten would have clipped the badge by 4px. The
+     * reserve now moves in step with the badge it reserves for.
+     */
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+  }
+}
+
+@container tile (max-width: 260px) {
+  .name {
+    /* 20px badge + 6px inset + an 8px gap. See the 420 step. */
+    right: 34px;
+    font-size: var(--text-caption-size);
+    line-height: var(--text-caption-line-height);
+  }
+
+  /* Both badges step together: they are one family and sit on one tile, so a
+     28px hand beside a 20px mic would read as two unrelated things. */
+  .muted,
+  .handRaised {
+    width: 20px;
+    height: 20px;
+  }
+
+  .muted {
+    top: 6px;
+    right: 6px;
+  }
+
+  .handRaised {
+    bottom: 6px;
+    right: 6px;
+  }
+
+  /* The Icon takes its size as a prop, so only CSS can restate it per container. */
+  .muted svg,
+  .handRaised svg {
+    width: 14px;
+    height: 14px;
+  }
+}

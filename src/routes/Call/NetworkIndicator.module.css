@@ -1,0 +1,34 @@
+/*
+ * Not in the Figma - the Meeting frame draws a healthy call. Live-sourced from
+ * Meet and screenshot-review material.
+ *
+ * Floated over the stage rather than in the flow, for the same reason as the
+ * reconnecting banner: a passing blip must not resize every tile on its way
+ * through. Top left, so it does not collide with that banner, which is centred.
+ */
+
+.indicator {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-call-control);
+  color: var(--color-call-text);
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+}
+
+/* --color-error rather than the brand red: this is a warning, and brand-red is
+   the Google logo's red. --color-call-leave is the same value and means "hang
+   up", which is not what this is saying either. */
+.indicator svg {
+  flex: none;
+  color: var(--color-error);
+}

@@ -1,0 +1,62 @@
+/*
+ * Not in the Figma. Sourced from live Meet and screenshot-review material.
+ *
+ * Dark, because it belongs to the call rather than to the green room, and the
+ * call is an always-dark surface. Not a theme. See DECISIONS.md.
+ */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 100dvh;
+  padding: 24px;
+  background-color: var(--color-call-surface);
+  color: var(--color-call-text);
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--text-display-family);
+  font-size: var(--text-display-size);
+  font-weight: var(--text-display-weight);
+  line-height: var(--text-display-line-height);
+  color: var(--color-call-text);
+}
+
+.description {
+  margin: 0;
+  font-family: var(--text-body-lg-family);
+  font-size: var(--text-body-lg-size);
+  line-height: var(--text-body-lg-line-height);
+  color: var(--color-call-text-secondary);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* The accent ring is a blue that all but disappears against black. */
+.actions button:focus-visible {
+  outline-color: var(--color-call-text);
+}
+
+/*
+ * Button's text variant is built for the light surfaces: accent-blue label on an
+ * accent-container hover. Both are close to unreadable on black, so the label
+ * and the hover are restated here rather than a new primitive variant being
+ * invented for one button.
+ */
+.secondary {
+  color: var(--color-call-text);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: var(--color-call-control);
+}

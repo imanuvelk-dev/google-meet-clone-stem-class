@@ -1,0 +1,33 @@
+/* Order matters: fonts and tokens must land before anything consumes them. */
+@import './fonts.css';
+@import './tokens.css';
+@import './motion.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* The Figma renders at 1728px. Text-size-adjust would silently resize type on
+   mobile and quietly break the diff. */
+html {
+  text-size-adjust: 100%;
+}

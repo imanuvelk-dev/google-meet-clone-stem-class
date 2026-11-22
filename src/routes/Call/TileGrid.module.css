@@ -1,0 +1,46 @@
+/*
+ * Figma: `grid` (I64:2563;58:1190) - a 1696x1021 column of `row`s at gap 17,
+ * each row a flex row at gap 16. Three people resolve to two rows of 840x502,
+ * the second holding one tile at x=428, i.e. centred.
+ */
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 17px;
+}
+
+.row {
+  display: flex;
+  /* 1 1 0, not 1: rows share the stage equally regardless of what is in them,
+     which is what makes both of the frame's rows 502px tall when one holds two
+     tiles and the other holds one. */
+  flex: 1 1 0;
+  min-height: 0;
+  gap: 16px;
+  justify-content: center;
+}
+
+.cell {
+  /*
+   * Every cell is a full row's share, even in a short row - which is exactly why
+   * the frame's lone bottom tile is 840px wide and centred rather than 1696px
+   * wide. shrink stays on so a sub-pixel remainder cannot overflow the row.
+   */
+  flex: 0 1 calc((100% - (var(--cols) - 1) * 16px) / var(--cols));
+  min-width: 0;
+
+  /*
+   * The tile sizes itself against this, and so does everything inside it. A size
+   * container rather than inline-size: the tile needs the cell's height to work
+   * out the largest 840:502 box that fits, and Meet's tiles answer to the grid
+   * filling up, not to the window.
+   */
+  container-type: size;
+  container-name: tile;
+
+  display: grid;
+  place-items: center;
+}

@@ -1,0 +1,629 @@
+/* Figma `Desktop / Meeting / Light` > Container 1728x80 (the bar).
+   Sizes below are that node tree's, in its own px. The frame is 1728 wide;
+   nothing here is meaningful at another width without re-reading the design.
+
+   The surface is always dark and is NOT the deferred dark theme: Meet's call is
+   dark whatever your theme, the way a video player is. Hence --color-call-*.
+   See docs/FIGMA.md. */
+
+.bar {
+  display: flex;
+  align-items: center;
+  /* Container 1728x80, padding 16.
+     Its gap of 10 is deliberately dropped. The three groups sum to 566+564+566
+     = 1696 = exactly the content box, so Figma's SPACE_BETWEEN has no slack to
+     hand out and they abut: measured, they start at x=16, 582, 1146. Honouring
+     the 10 would pull all three inward and lose the arithmetic. */
+  gap: 0;
+  height: 80px;
+  padding: 16px;
+  /* No fill in Figma. The call surface behind it shows through. */
+  background: transparent;
+  color: var(--color-call-text);
+
+  /* Tooltip defaults to precall's near-black on white. Unset, every tooltip
+     here would be a #1f1f1f box on a black bar. */
+  --tooltip-surface: var(--color-call-control);
+  --tooltip-text: var(--color-call-text);
+}
+
+/* Left and right are 566 each because they take what the fixed 564 centre
+   leaves: (1696 - 564) / 2. Expressed as flex rather than as 566px so the
+   centre group stays centred on the viewport, not on 1728. */
+.groupLeft,
+.groupRight {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-width: 0;
+  height: 48px;
+}
+
+/* Container 566x48, align MIN (left). */
+.groupLeft {
+  justify-content: flex-start;
+}
+
+/* Container 566x48, align MAX (right), gap 0. */
+.groupRight {
+  justify-content: flex-end;
+  gap: 0;
+}
+
+/* Container 564x48, gap 8. Fixed: its eight children are fixed. */
+.groupCentre {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  align-items: center;
+  height: 48px;
+}
+
+/* Left group > Container 204x48, r=100, padding 12. No fill: the radius is on a
+   transparent box, so it shows only if this ever gains a background. */
+.clock {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 12px;
+  border-radius: var(--radius-full);
+}
+
+/* Container 180x24, gap 12. Width is intrinsic here, not the Figma's 180: that
+   180 is "11:48 AM" plus "Design Chat" at their natural widths, and our clock
+   and meeting code are different strings. Pinning it would clip them. */
+.clockRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  height: 24px;
+  min-width: 0;
+}
+
+.clockTime,
+.clockName {
+  font-family: var(--text-body-lg-strong-family);
+  font-size: var(--text-body-lg-strong-size);
+  font-weight: var(--text-body-lg-strong-weight);
+  line-height: var(--text-body-lg-strong-line-height);
+  color: var(--color-call-text);
+  white-space: nowrap;
+}
+
+.clockName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* VECTOR "Divider" 0x16, stroke #ffffff at 1px. A zero-width stroked path is a
+   1px rule; there is no such thing in CSS, so it is a bordered box. */
+.clockDivider {
+  flex: none;
+  width: 1px;
+  height: 16px;
+  background-color: var(--color-call-text);
+}
+
+/* --- In Call Controls (INSTANCE 88x48) ------------------------------------
+   A track with a 40px chevron zone and a 48x48 face on its right.
+
+   The face repeats the track's radius rather than picking its own, and that is
+   exact in both states, not a shortcut. Off: both are 12, so the face's left
+   corners cut two notches into the red. On: 100 clamps to 24 on a 48-tall box,
+   so the face is a circle whose right half traces the pill's own end. */
+
+.split {
+  display: flex;
+  align-items: stretch;
+  width: 88px;
+  height: 48px;
+}
+
+.splitOn {
+  border-radius: var(--radius-full);
+  background-color: var(--color-call-control-track);
+}
+
+.splitOff {
+  border-radius: var(--radius-xl);
+  background-color: var(--color-call-control-active);
+}
+
+.menuAnchor {
+  position: relative;
+  display: flex;
+}
+
+/* GROUP "more" 20x20 sits at x=14 of a 0..40 zone, so its centre is 24, not the
+   zone's 20. The 8px of left padding is what moves it those 4px. */
+.chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 48px;
+  padding: 0 0 0 8px;
+  border: none;
+  border-radius: inherit;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: transform var(--motion-duration-press) var(--motion-ease-standard);
+}
+
+.splitOn .chevron {
+  color: var(--color-call-text-secondary);
+}
+
+.splitOff .chevron {
+  color: var(--color-call-control-active-contrast);
+}
+
+.splitFace {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: inherit;
+  cursor: pointer;
+  transition: transform var(--motion-duration-press) var(--motion-ease-standard);
+}
+
+.splitOn .splitFace {
+  background-color: var(--color-call-control);
+  color: var(--color-call-text);
+}
+
+.splitOff .splitFace {
+  background-color: var(--color-call-control-active-contrast);
+  color: var(--color-call-control-active);
+}
+
+/* --- The round controls --------------------------------------------------- */
+
+.control,
+.controlWide,
+.controlNarrow,
+.leave,
+.plain {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  border: none;
+  border-radius: var(--radius-full);
+  color: var(--color-call-text);
+  cursor: pointer;
+  transition: transform var(--motion-duration-press) var(--motion-ease-standard);
+}
+
+/* Screen Share / Reaction / Closed Caption / Raised Hands, each 56x48. */
+.control,
+.controlWide {
+  width: 56px;
+  background-color: var(--color-call-control);
+}
+
+/* Options 36x48. Narrower because it holds a 4px-wide glyph. */
+.controlNarrow {
+  width: 36px;
+  background-color: var(--color-call-control);
+}
+
+/* Leave Call 72x48. */
+.leave {
+  width: 72px;
+  background-color: var(--color-call-leave);
+}
+
+/* The right group: 48x48 with no fill in Figma. The radius exists for the hover
+   and focus rings, which the frame cannot show. */
+.plain {
+  position: relative;
+  width: 48px;
+  background: transparent;
+}
+
+/* The open panel's own button. Measured off the two frames rather than guessed:
+   in Chat/Light the chat glyph is #a8c7fa and people is not, and in People/Light
+   they swap. Only the glyph tints - there is no pill behind it - which is why
+   this sets colour alone and not a background like .controlOn. */
+.plainOn {
+  color: var(--color-accent-subtle);
+}
+
+/* Presenting. No Figma state: the frame is drawn with nobody sharing. It
+   borrows the red active pair because that is the only "this control is
+   engaged" vocabulary the design defines, and stopping a share is worth
+   noticing. Live-sourced, so it still needs a screenshot review. */
+.controlOn {
+  background-color: var(--color-call-control-active);
+  color: var(--color-call-control-active-contrast);
+}
+
+/* Marks a centre control the phone bar has no room for. See docs/DECISIONS.md. */
+.barOptional {
+}
+
+/* Badge 16x16 @(26,-1) inside People's 48x48, fill #333537. */
+.badge {
+  position: absolute;
+  top: -1px;
+  left: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  padding: 2px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-call-control);
+  color: var(--color-call-text);
+  font-family: var(--text-badge-family);
+  font-size: var(--text-badge-size);
+  font-weight: var(--text-badge-weight);
+  line-height: var(--text-badge-line-height);
+}
+
+/* --- States ---------------------------------------------------------------
+   Hover and focus have no Figma frame either. White rather than --color-accent,
+   which is a dark blue drawn for a white page and nearly invisible here. */
+
+.chevron:focus-visible,
+.splitFace:focus-visible,
+.control:focus-visible,
+.controlWide:focus-visible,
+.controlNarrow:focus-visible,
+.leave:focus-visible,
+.plain:focus-visible,
+.menuItem:focus-visible {
+  outline: 2px solid var(--color-call-text);
+  outline-offset: 2px;
+}
+
+.controlWide:hover:not([aria-disabled='true']),
+.controlNarrow:hover,
+.plain:hover:not([aria-disabled='true']) {
+  filter: brightness(1.35);
+}
+
+.plain:hover:not([aria-disabled='true']) {
+  background-color: var(--color-call-control-track);
+}
+
+.leave:hover {
+  filter: brightness(1.1);
+}
+
+.chevron:active:not([aria-disabled='true']),
+.splitFace:active:not([aria-disabled='true']),
+.control:active:not([aria-disabled='true']),
+.controlWide:active:not([aria-disabled='true']),
+.controlNarrow:active:not([aria-disabled='true']),
+.leave:active:not([aria-disabled='true']),
+.plain:active:not([aria-disabled='true']),
+.reaction:active:not([aria-disabled='true']) {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron:active:not([aria-disabled='true']),
+  .splitFace:active:not([aria-disabled='true']),
+  .control:active:not([aria-disabled='true']),
+  .controlWide:active:not([aria-disabled='true']),
+  .controlNarrow:active:not([aria-disabled='true']),
+  .leave:active:not([aria-disabled='true']),
+  .plain:active:not([aria-disabled='true']),
+  .reaction:active:not([aria-disabled='true']) {
+    transform: none;
+  }
+}
+
+/* aria-disabled, not :disabled. A disabled button cannot be focused, so its
+   tooltip - the only thing that explains the refusal - is unreachable without a
+   mouse. These stay focusable and announce themselves; the click does nothing
+   because no handler is attached. */
+[aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.38;
+}
+
+/* --- Menus ----------------------------------------------------------------
+   No Figma frame: the design is drawn with every menu closed. Follows live
+   Meet's dark popup, which is the call surface's own vocabulary rather than
+   precall's white --color-surface. Needs a screenshot review. */
+
+.menuList {
+  position: absolute;
+  /* Opens upward: the bar is on the floor of the viewport. */
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 10;
+  min-width: 260px;
+  padding: 8px 0;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-call-control);
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 30%),
+    0 2px 6px 2px rgb(0 0 0 / 15%);
+  transform-origin: var(--origin-x, left) var(--origin-y, bottom);
+}
+
+/* Menus hanging off the bar's right group, which would otherwise run off the
+   viewport: the group is flush with the frame's right edge. */
+/* See ControlBarMenu's `direction`. Only the People rows use this: their trigger
+   is near the top of a scrolling panel, not on the floor of the viewport. */
+.menuList[data-direction='down'] {
+  top: calc(100% + 4px);
+  bottom: auto;
+  --origin-y: top;
+}
+
+.menuList[data-align='end'] {
+  right: 0;
+  left: auto;
+  --origin-x: right;
+}
+
+.menuList[data-state='entering'] {
+  animation: control-menu-enter var(--motion-duration-enter) var(--motion-ease-decelerate) backwards;
+}
+
+.menuList[data-state='exiting'] {
+  animation: control-menu-exit var(--motion-duration-exit) var(--motion-ease-accelerate) forwards;
+}
+
+@keyframes control-menu-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes control-menu-exit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: var(--color-call-text);
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  text-align: left;
+  cursor: pointer;
+}
+
+.menuItemIcon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Layout and full screen are different kinds of thing in one menu, and the rule
+   is what says the group above has ended. */
+.menuItemDivided {
+  margin-top: 8px;
+  border-top: 1px solid var(--color-call-control-track);
+  padding-top: 10px;
+}
+
+.menuLabel {
+  margin: 0;
+  padding: 4px 16px;
+  color: var(--color-call-text-secondary);
+  font-family: var(--text-caption-family);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line-height);
+}
+
+/* The reactions picker. Live-sourced: the frame draws every menu closed, so it
+   has no geometry to match. Two rows of four, in REACTION_EMOJI's order. */
+
+.menuReactions {
+  min-width: 0;
+  padding: 0;
+}
+
+.reactions {
+  display: grid;
+  grid-template-columns: repeat(4, 40px);
+  gap: 4px;
+  padding: 8px;
+}
+
+.reaction {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform var(--motion-duration-press) var(--motion-ease-standard);
+}
+
+.menuReactions[data-state='entering'] .reaction {
+  animation: reaction-pop var(--motion-duration-enter) var(--motion-ease-decelerate) backwards;
+  animation-delay: calc(var(--stagger-index, 0) * 15ms);
+}
+
+@keyframes reaction-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.reaction:hover {
+  background-color: rgb(255 255 255 / 8%);
+}
+
+.reaction:focus-visible {
+  outline: 2px solid var(--color-call-text);
+  outline-offset: -2px;
+}
+
+.menuItem:hover {
+  background-color: var(--color-call-control-track);
+}
+
+.menuItem:active {
+  background-color: rgb(0 0 0 / 40%);
+}
+
+.menuItem[aria-checked='true'] {
+  color: var(--color-accent-subtle);
+}
+
+.menuEmpty {
+  margin: 0;
+  padding: 10px 16px;
+  color: var(--color-call-text-secondary);
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+}
+
+/* --- Meeting details ------------------------------------------------------
+   The bar's right group is right-aligned, so this popup has to grow leftward
+   from its trigger or it runs off the viewport. */
+
+.details {
+  width: 320px;
+  padding: 8px 16px 12px;
+}
+
+.detailsTitle {
+  margin: 0 0 8px;
+  font-family: var(--text-body-lg-strong-family);
+  font-size: var(--text-body-lg-strong-size);
+  font-weight: var(--text-body-lg-strong-weight);
+  line-height: var(--text-body-lg-strong-line-height);
+  color: var(--color-call-text);
+}
+
+.detailsLink {
+  margin: 0 0 12px;
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  color: var(--color-call-text-secondary);
+  /* A meeting link has no spaces to break at, so it would otherwise overflow. */
+  word-break: break-all;
+  user-select: text;
+}
+
+.detailsCopy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-left: -12px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-accent-subtle);
+  font-family: var(--text-label-family);
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+  line-height: var(--text-label-line-height);
+  cursor: pointer;
+}
+
+.detailsCopy:hover:not(:disabled) {
+  background-color: var(--color-call-control-track);
+}
+
+.detailsCopy:focus-visible {
+  outline: 2px solid var(--color-call-text);
+  outline-offset: 2px;
+}
+
+.detailsCopy:disabled {
+  color: var(--color-call-text-secondary);
+  cursor: default;
+}
+
+/*
+ * Provisional, and not a design.
+ *
+ * The bar above is the Figma's 1728 frame, and the Figma has no mobile in-call
+ * design that applies to us: its mobile frames are the native iOS app. Mobile
+ * web is sourced from the live product and reviewed with the user in its own
+ * milestone, so this is not that.
+ *
+ * It exists because mounting the desktop bar overflowed a 412px phone by 168px
+ * and left Leave 96px off-screen: a call you cannot hang up. Being unfinished
+ * is survivable; that is not.
+ *
+ * What goes, goes in order of what it costs to lose. The clock, the meeting
+ * name and the whole right group first, since not one of them is a control that
+ * works yet. Then the controls that do not work yet either, matched on
+ * aria-disabled rather than by name, so each returns on its own the moment
+ * Phase 3 makes it real.
+ *
+ * What survives is what a call actually needs: mic, camera, share, options, and
+ * the way out.
+ */
+@media (max-width: 900px) {
+  /* The centre group is centred by the two flexible groups either side of it.
+     With those gone, it needs saying directly. */
+  .bar {
+    justify-content: center;
+  }
+
+  .groupLeft,
+  .groupRight {
+    display: none;
+  }
+
+  /* :has, because Tooltip wraps each control in a span - hiding the button
+     alone would leave the wrapper holding a gap open. Direct-child on both
+     sides, for the same reason as the rule below: the options menu's wrapper is
+     a direct child of .groupCentre and the mobile sheet renders inside it, so a
+     descendant :has would hide the whole sheet the moment one of its rows was
+     aria-disabled. See docs/DECISIONS.md. */
+  .groupCentre > *:has(> [aria-disabled='true']) {
+    display: none;
+  }
+
+  /*
+   * Reactions, Raise hand and Captions are real controls with no room on the bar
+   * of a phone. Their function is not lost - it moves into the mobile options
+   * sheet (MobileOptionsSheet), which the three-dot opens instead of the desktop
+   * popup. Both selectors, and the direct-child combinator in each, are
+   * explained in docs/DECISIONS.md. Do not widen either to a descendant.
+   */
+  .groupCentre > .barOptional,
+  .groupCentre > *:has(> .barOptional) {
+    display: none;
+  }
+}

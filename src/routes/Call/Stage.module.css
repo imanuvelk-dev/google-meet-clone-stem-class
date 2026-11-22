@@ -1,0 +1,129 @@
+/*
+ * Figma: `People` (64:2563) - 1696x1021 at (16, 16) in the 1728x1117 Meeting
+ * frame, with the 1728x80 control bar below it at y=1037. So the stage's own
+ * padding is 16px on three sides and nothing at the bottom, where the bar starts.
+ *
+ * The surface is always dark, and these are --color-call-* tokens rather than a
+ * dark theme. See DECISIONS.md.
+ */
+
+.stage {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  padding: 16px 16px 0;
+}
+
+/* The focused arrangements - Spotlight and Sidebar, and the pin or share that
+   pulls Tiled into one. None is in the Figma: all are sourced from the live
+   product and are screenshot-review material. Spotlight simply omits the strip,
+   so the primary takes the whole row. */
+.focus {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 16px;
+}
+
+.primary {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  min-width: 0;
+
+  /* The primary tile sizes itself against this, exactly as a grid tile does
+     against its cell. Same contract, different container. */
+  container-type: size;
+  container-name: tile;
+}
+
+.strip {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.stripCell {
+  container-type: size;
+  container-name: tile;
+  display: grid;
+  place-items: center;
+  /* Every strip tile is the same height whatever the count, so the strip does
+     not resize itself as people paginate through it. */
+  flex: 0 0 calc((100% - 5 * 16px) / 6);
+  min-height: 0;
+}
+
+.share {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-3xl);
+  overflow: hidden;
+  background-color: var(--color-call-control);
+}
+
+.whiteboard {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: var(--radius-3xl);
+  background-color: var(--color-call-control);
+}
+
+.shareName {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  margin: 0;
+  font-family: var(--text-body-lg-strong-family);
+  font-size: var(--text-body-lg-strong-size);
+  font-weight: var(--text-body-lg-strong-weight);
+  line-height: var(--text-body-lg-strong-line-height);
+  color: var(--color-call-text);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 25%);
+}
+
+/* Your own share, which is never rendered back at you: a tab capturing itself is
+   a tunnel of mirrors, and you already know what is on your screen. */
+.presentingCard {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-3xl);
+  background-color: var(--color-call-control);
+}
+
+.presentingTitle {
+  margin: 0;
+  font-family: var(--text-title-family);
+  font-size: var(--text-title-size);
+  font-weight: var(--text-title-weight);
+  line-height: var(--text-title-line-height);
+  color: var(--color-call-text);
+}
+
+@media (max-width: 900px) {
+  .focus {
+    flex-direction: column;
+  }
+
+  .strip {
+    flex-direction: row;
+    width: auto;
+    height: 96px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .stripCell {
+    flex: 0 0 auto;
+    height: 100%;
+    aspect-ratio: 16 / 9;
+  }
+}

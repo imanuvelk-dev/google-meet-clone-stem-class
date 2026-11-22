@@ -1,0 +1,173 @@
+/*
+ * Figma `Desktop / Meeting / People / Light` (52:2215) > People 360x1021 at
+ * (1352, 16).
+ *
+ * "Add People" (135x40) and the "Contributors" group header are deliberately
+ * absent, so the search field moves up into the space Add People held. See
+ * PeoplePanel.tsx and DECISIONS.md.
+ */
+
+/* Container 360x64, padding 0/12/16/12 > Search 336x48, gap 12, padding 12. */
+.searchRow {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  margin: 0 12px 16px;
+  padding: 0 12px;
+  border: 1px solid var(--color-call-panel-border);
+  border-radius: var(--radius-full);
+}
+
+.searchIcon {
+  display: flex;
+  flex: 0 0 auto;
+  color: var(--color-call-panel-text-secondary);
+}
+
+.search {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-call-panel-text);
+  font-family: var(--text-body-lg-family);
+  font-size: var(--text-body-lg-size);
+  line-height: var(--text-body-lg-line-height);
+}
+
+.search::placeholder {
+  color: var(--color-call-panel-text-secondary);
+}
+
+.search:focus-visible {
+  outline: none;
+}
+
+.searchRow:focus-within {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -1px;
+}
+
+/* Title 360x32, padding 8/8/8/24 > `In the meeting` TEXT 88x16. */
+.sectionTitle {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 8px 8px 8px 24px;
+  font-family: var(--text-caption-family);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line-height);
+  color: var(--color-call-panel-text-secondary);
+}
+
+/*
+ * List 336x192, padding 12/8/12/20, inside a 360x232 padded 0/12.
+ *
+ * Deliberately NOT its own scroller, though it is the thing that grows. Panel's
+ * .body already scrolls, and a second overflow here nested inside it clipped the
+ * row menus away: a menu is absolutely positioned, so the nearest scroll
+ * container is its horizon, and that horizon was 192px tall. One scroller means
+ * the menu's horizon is the whole panel, and anything past it can at least be
+ * scrolled to rather than being invisible.
+ */
+.list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin: 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+/* Person 308x56, gap 8, padding 4/0. */
+.person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 4px 8px 4px 8px;
+}
+
+.personName {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.personLabel {
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  color: var(--color-call-panel-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.personSubtitle {
+  font-family: var(--text-caption-family);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line-height);
+  color: var(--color-call-panel-text-secondary);
+}
+
+.personMuted,
+.hand {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-call-panel-text-secondary);
+}
+
+/* Live-sourced: the frame draws a resting state and has no raised hand. */
+.hand {
+  color: var(--color-call-panel-text);
+}
+
+/* Icon 32x32, padding 4. */
+.personMore {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-call-panel-text);
+  cursor: pointer;
+}
+
+.personMore:hover {
+  background-color: rgb(31 31 31 / 8%);
+}
+
+.personMore:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--color-call-text);
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  text-align: left;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background-color: rgb(255 255 255 / 8%);
+}

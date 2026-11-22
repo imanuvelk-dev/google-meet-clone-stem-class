@@ -1,0 +1,24 @@
+.video {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+ * Figma: the tile's image fill (I64:2563;64:2104;60:5) is scaleMode FILL at
+ * 840x502, i.e. the camera's own ratio is cropped to the tile's rather than
+ * letterboxed inside it.
+ */
+.cover {
+  object-fit: cover;
+}
+
+.contain {
+  object-fit: contain;
+}
+
+/* Meet mirrors your own camera, as precall already does. Never a remote: their
+   text and gestures are not yours to reverse. */
+.mirrored {
+  transform: scaleX(-1);
+}

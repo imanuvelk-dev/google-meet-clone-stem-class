@@ -1,0 +1,126 @@
+/*
+ * The in-call surface is always dark, and these are the --color-call-* tokens,
+ * not a dark theme. Real Meet's call is dark whatever your theme, like a video
+ * player, so nothing here follows a toggle. See CLAUDE.md.
+ *
+ * Geometry is NOT from the Figma Meeting frame. This is the lifecycle shell:
+ * M4-M6 bring the grid, the tiles and the control bar, and they own matching
+ * that frame. Values here are placeholders and are marked as such rather than
+ * dressed up with node references they do not have.
+ */
+
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/*
+ * Stage and panel side by side, above the bar. The stage keeps its own padding
+ * and never learns a panel exists: a 360 panel with a 16 right margin leaves the
+ * stage's content box at exactly the 1320 the Chat and People frames draw.
+ *
+ * The stage keeps its own `padding: 16px 16px 0`. With this panel at 360 wide
+ * plus a 16 right margin, the stage's content box lands on 1320 - which is what
+ * the frame draws - without Stage.module.css knowing a panel exists.
+ */
+.panelSlot {
+  --panel-width: 360px;
+  --panel-gutter: 16px;
+
+  display: flex;
+  flex: 0 0 var(--panel-width);
+  margin: 16px var(--panel-gutter) 0 0;
+  transition: margin-right var(--motion-duration-enter) var(--motion-ease-decelerate);
+}
+
+@starting-style {
+  .panelSlot {
+    margin-right: calc(-1 * var(--panel-width));
+  }
+}
+
+.panelSlot[data-state='exiting'] {
+  margin-right: calc(-1 * var(--panel-width));
+  transition-duration: var(--motion-duration-exit);
+  transition-timing-function: var(--motion-ease-accelerate);
+}
+
+/*
+ * Mobile is a full-screen overlay, not a side panel - real Meet mobile web, and
+ * live-sourced rather than the Figma's iOS frames. 900px matches the breakpoint
+ * ControlBar.module.css already uses, so the panel goes full-screen exactly when
+ * the bar collapses.
+ */
+@media (max-width: 900px) {
+  .panelSlot {
+    position: fixed;
+    z-index: 2;
+    inset: 0;
+    margin: 0;
+    transform: none;
+    opacity: 1;
+    transition:
+      transform var(--motion-duration-enter) var(--motion-ease-decelerate),
+      opacity var(--motion-duration-enter) var(--motion-ease-decelerate);
+  }
+
+  @starting-style {
+    .panelSlot {
+      margin-right: 0;
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  .panelSlot[data-state='exiting'] {
+    margin: 0;
+    transform: translateX(100%);
+    opacity: 0;
+    transition-duration: var(--motion-duration-exit);
+    transition-timing-function: var(--motion-ease-accelerate);
+  }
+}
+
+.call {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background-color: var(--color-call-surface);
+  color: var(--color-call-text);
+}
+
+/* Meet floats this over the grid rather than reflowing it: a connection blip
+   must not resize every tile on the way past. */
+.banner {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  margin: 0;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-call-control);
+  color: var(--color-call-text);
+  font-family: var(--text-body-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+}
+
+.stage {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.stageText {
+  margin: 0;
+  font-family: var(--text-body-lg-family);
+  font-size: var(--text-body-lg-size);
+  line-height: var(--text-body-lg-line-height);
+  color: var(--color-call-text);
+}
+

@@ -1,0 +1,13 @@
+dist
+coverage
+node_modules
+.figma
+playwright-report
+test-results
+
+# Generated from Figma - never hand-edited, never reformatted
+src/design/tokens.css
+src/design/tokens.d.ts
+
+# Sentence-per-line Markdown is deliberate; Prettier would reflow it
+*.md

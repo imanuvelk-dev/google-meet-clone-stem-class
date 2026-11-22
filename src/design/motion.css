@@ -1,0 +1,19 @@
+:root {
+  --motion-duration-press: 100ms;
+  --motion-duration-enter: 200ms;
+  --motion-duration-exit: 150ms;
+  --motion-duration-tint: 150ms;
+
+  --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-decelerate: cubic-bezier(0, 0, 0, 1);
+  --motion-ease-accelerate: cubic-bezier(0.3, 0, 1, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-press: 1ms;
+    --motion-duration-enter: 1ms;
+    --motion-duration-exit: 1ms;
+    --motion-duration-tint: 1ms;
+  }
+}

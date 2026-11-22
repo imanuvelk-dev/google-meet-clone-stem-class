@@ -1,0 +1,18 @@
+.avatar {
+  /* Set by the component from its size prop, which may be any CSS length. 0.44
+     is the ratio the initial has always been drawn at; it lives here now because
+     the box can be given in units only CSS can resolve. */
+  width: var(--avatar-size, 32px);
+  height: var(--avatar-size, 32px);
+  font-size: calc(var(--avatar-size, 32px) * 0.44);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  color: var(--color-text-on-accent);
+  font-family: var(--text-label-family);
+  font-weight: var(--text-label-weight);
+  line-height: 1;
+  user-select: none;
+  flex-shrink: 0;
+}

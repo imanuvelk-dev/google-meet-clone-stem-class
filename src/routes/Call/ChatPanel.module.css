@@ -1,0 +1,143 @@
+/*
+ * Figma `Desktop / Meeting / Chat / Light` (52:1890) > Chat 360x1021 at
+ * (1352, 16). Measured off the 2x render rather than read off the tree, because
+ * the tree's gaps lie: Input Field is 328 wide with a 280 field and a 48 button,
+ * so its stated gap of 51 has no slack and is inert - the same trick the control
+ * bar's gap of 10 plays.
+ *
+ * The "Let contributors send messages" toggle the frame draws at y 92..140 is
+ * deliberately absent. See ChatPanel.tsx and DECISIONS.md.
+ */
+
+/* Container 360x96 > inner 336x72 at (1364, 164), fill #e9eef6, text 312x48.
+   Our sentence is shorter than the frame's, so the box is shorter: the height
+   is the text's, not a hardcoded 72. See ChatPanel.tsx's NOTICE. */
+.notice {
+  flex: 0 0 auto;
+  margin: 12px;
+  padding: 12px;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-call-panel-notice);
+  color: var(--color-call-panel-text);
+  font-family: var(--text-caption-family);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line-height);
+  text-align: center;
+}
+
+/* Chat List 360x56 > Container padding 10/12 > Chat 336x36 padding 0/16. */
+.log {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0;
+  padding: 10px 12px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 16px;
+}
+
+/* Consecutive messages from one sender drop the name and time, keeping only the
+   text. Meet groups this way; the frame draws a single message and cannot show
+   it. */
+.grouped {
+  padding-top: 0;
+}
+
+/* Top 304x16, gap 8. */
+.meta {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin: 0;
+}
+
+.sender {
+  font-family: var(--text-caption-family);
+  font-size: var(--text-caption-size);
+  font-weight: 500;
+  line-height: var(--text-caption-line-height);
+  color: var(--color-call-panel-text);
+}
+
+.time {
+  font-family: var(--text-caption-family);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line-height);
+  color: var(--color-call-panel-text-secondary);
+}
+
+.text {
+  margin: 0;
+  font-family: var(--text-caption-family);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line-height);
+  color: var(--color-call-panel-text);
+  overflow-wrap: anywhere;
+}
+
+/* Container 360x80, padding 16 > Input Field 328x48 at (1368, 973). White with
+   a 1px #aaaaaa border - measured; it is not a filled field. */
+.composer {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  padding: 16px;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--color-call-panel-border);
+  border-right: 0;
+  border-radius: var(--radius-full) 0 0 var(--radius-full);
+  background-color: var(--color-call-panel-surface);
+  color: var(--color-call-panel-text);
+  font-family: var(--text-caption-family);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line-height);
+}
+
+.input::placeholder {
+  color: var(--color-call-panel-text-secondary);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+/* Send 48x48. */
+.send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--color-call-panel-border);
+  border-left: 0;
+  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  background-color: var(--color-call-panel-surface);
+  color: var(--color-call-panel-text-secondary);
+  cursor: pointer;
+}
+
+.send:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+.send:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}

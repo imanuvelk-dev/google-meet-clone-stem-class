@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import styles from './VideoSurface.module.css'
 
 /**
@@ -23,7 +23,6 @@ export function VideoSurface({
   testId: string
 }) {
   const ref = useRef<HTMLVideoElement>(null)
-  const [isPortrait, setIsPortrait] = useState(false)
 
   useEffect(() => {
     const element = ref.current
@@ -37,26 +36,10 @@ export function VideoSurface({
     // track died - which the participant leaving already handles by unmounting.
     void element.play().catch(() => {})
 
-    const checkOrientation = () => {
-      if (element.videoWidth > 0 && element.videoHeight > 0) {
-        setIsPortrait(element.videoHeight > element.videoWidth)
-      }
-    }
-
-    checkOrientation()
-    element.addEventListener('loadedmetadata', checkOrientation)
-    element.addEventListener('resize', checkOrientation)
-
     return () => {
-      element.removeEventListener('loadedmetadata', checkOrientation)
-      element.removeEventListener('resize', checkOrientation)
       element.srcObject = null
     }
   }, [stream])
-
-  // When a mobile camera sends portrait (vertical) video, 'cover' crops out the
-  // top and bottom of the participant's face. Using 'contain' preserves the full face.
-  const resolvedFit = fit === 'cover' && isPortrait ? 'contain' : fit
 
   return (
     <video
@@ -70,7 +53,7 @@ export function VideoSurface({
        * of the feedback loop CallAudio is so careful about.
        */
       muted
-      className={[styles.video, styles[resolvedFit], mirrored ? styles.mirrored : null]
+      className={[styles.video, styles[fit], mirrored ? styles.mirrored : null]
         .filter(Boolean)
         .join(' ')}
       data-testid={testId}
